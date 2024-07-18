@@ -43,3 +43,8 @@ tasks.named('test') {
 tasks.named('bootJar') {
 	archiveFileName.set('app.jar')
 }
+
+bootRun {
+//	デバッグ実行用の設定
+	jvmArgs = ['-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005']
+}
