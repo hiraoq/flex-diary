@@ -7,10 +7,13 @@ RUN chmod +x ./gradlew
 # Gradleを使用してプロジェクトをビルド
 RUN ./gradlew build --no-daemon -x test
 
-# 実行環境としてAmazon Corretto 21を使用
-FROM amazoncorretto:21
+# 本番用のステージ
+FROM amazoncorretto:21 AS production
 WORKDIR /app
-# ビルド成果物をコピー
-COPY --from=builder /app/build/libs/*.jar /app/
-# アプリケーションを実行
+COPY --from=builder /app/build/libs/app.jar /app/app.jar
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+
+# 開発用のステージ
+FROM amazoncorretto:21 AS development
+WORKDIR /app
+ENTRYPOINT ["java", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005", "-jar", "/app/app.jar"]

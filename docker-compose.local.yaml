@@ -12,15 +12,21 @@ services:
       - mongodb-data:/data/db
 
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: amazoncorretto:21  # Dockerfileを使わずベースイメージを直接指定
+    container_name: flex-diary-app
+    working_dir: /app
+    ports:
+      - "8080:8080"
+      - "5005:5005"  # デバッグ用のポートを追加
+    volumes:
+      - .:/app  # ホットリロード用のボリュームマウント
+      - ./build/libs:/app/build/libs
     environment:
       MONGO_CONNECTION_STRING: mongodb://root:example@mongodb:27017/your-database
     depends_on:
       - mongodb
-    ports:
-      - "8080:8080"
+    entrypoint: ["java", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005", "-jar", "/app/build/libs/app.jar"]
+
 
 volumes:
   mongodb-data:
