@@ -22,7 +22,7 @@ services:
       - .:/app  # ホットリロード用のボリュームマウント
       - ./build/libs:/app/build/libs
     environment:
-      MONGO_CONNECTION_STRING: mongodb://root:example@mongodb:27017/your-database
+      MONGO_CONNECTION_STRING: mongodb://root:example@mongodb:27017/admin
       SPRING_PROFILES_ACTIVE: dev
     depends_on:
       - mongodb
