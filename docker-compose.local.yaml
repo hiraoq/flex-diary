@@ -23,9 +23,10 @@ services:
       - ./build/libs:/app/build/libs
     environment:
       MONGO_CONNECTION_STRING: mongodb://root:example@mongodb:27017/your-database
+      SPRING_PROFILES_ACTIVE: dev
     depends_on:
       - mongodb
-    entrypoint: ["java", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005", "-jar", "/app/build/libs/app.jar"]
+    entrypoint: ["./gradlew", "bootRun", "-Dspring.devtools.restart.enabled=true"]
 
 
 volumes:

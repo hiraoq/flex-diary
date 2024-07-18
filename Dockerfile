@@ -16,4 +16,6 @@ ENTRYPOINT ["java", "-jar", "/app/app.jar"]
 # 開発用のステージ
 FROM amazoncorretto:21 AS development
 WORKDIR /app
-ENTRYPOINT ["java", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005", "-jar", "/app/app.jar"]
+ENV SPRING_PROFILES_ACTIVE=dev
+ENV GRADLE_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+ENTRYPOINT ["./gradlew", "bootRun"]
