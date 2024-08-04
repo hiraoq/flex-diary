@@ -16,6 +16,9 @@ ENTRYPOINT ["java", "-jar", "/app/app.jar"]
 # 開発用のステージ
 FROM amazoncorretto:21 AS development
 WORKDIR /app
+COPY . .
+# gradlew に実行権限を付与する
+RUN chmod +x ./gradlew
 ENV SPRING_PROFILES_ACTIVE=dev
 ENV GRADLE_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
 ENTRYPOINT ["./gradlew", "bootRun"]
