@@ -1,0 +1,6 @@
+[submodule "flex-diary-ui"]
+	path = flex-diary-ui
+	url = git@github.com:hiraoq/flex-diary-ui.git
+[submodule "flex-diary-api"]
+	path = flex-diary-api
+	url = git@github.com:hiraoq/flex-diary-api.git
