@@ -17,8 +17,12 @@ ENTRYPOINT ["java", "-jar", "/app/app.jar"]
 FROM amazoncorretto:21 AS development
 WORKDIR /app
 COPY . .
-# gradlew に実行権限を付与する
-RUN chmod +x ./gradlew
+# entrypoint.shをコピーして実行権限を付与
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+# ホットリロード等を有効に
 ENV SPRING_PROFILES_ACTIVE=dev
+# リモートデバッグのためのjvmオプション
 ENV GRADLE_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+# 実行時にトリガーしたい処理
 ENTRYPOINT ["./gradlew", "bootRun"]
