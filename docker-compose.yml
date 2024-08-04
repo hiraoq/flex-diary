@@ -1,0 +1,44 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo:4.4
+    container_name: mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+
+  app:
+    build:
+      context: ./flex-diary-api
+      dockerfile: Dockerfile
+      target: development
+    container_name: flex-diary-api
+    working_dir: /app
+    ports:
+      - "8080:8080"
+      - "5005:5005"  # デバッグ用のポートを追加
+    volumes:
+      - ./flex-diary-api:/app  # ホットリロード用のボリュームマウント
+      - ./flex-diary-api/build/libs:/app/build/libs
+    environment:
+      MONGO_CONNECTION_STRING: mongodb://root:example@mongodb:27017/admin
+      SPRING_PROFILES_ACTIVE: dev
+    depends_on:
+      - mongodb
+
+  frontend:
+    build:
+      context: ./flex-diary-ui
+      dockerfile: Dockerfile
+    container_name: flex-diary-ui
+    ports:
+      - "3000:80"
+    volumes:
+      - ./flex-diary-ui:/app  # 必要に応じてホットリロードを設定
+
+volumes:
+  mongodb-data:
