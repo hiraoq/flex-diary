@@ -60,7 +60,7 @@ flex-diary-ui/
 └── package.json
 \`\`\`
 
-## インストールとセットアップ
+## 環境構築方法(済)
 1. プロジェクトを作成します。
    \`\`\`sh
    npx degit reduxjs/redux-templates/packages/vite-template-redux flex-diary-ui
