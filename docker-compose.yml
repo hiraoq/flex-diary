@@ -11,7 +11,7 @@ services:
     volumes:
       - mongodb-data:/data/db
 
-  app:
+  api:
     build:
       context: ./flex-diary-api
       dockerfile: Dockerfile
@@ -30,15 +30,20 @@ services:
     depends_on:
       - mongodb
 
-  frontend:
+  ui:
     build:
       context: ./flex-diary-ui
       dockerfile: Dockerfile
+      target: development
     container_name: flex-diary-ui
+    working_dir: /app 
     ports:
-      - "3000:80"
+      - "5173:5173" # viteサーバーのポート
     volumes:
-      - ./flex-diary-ui:/app  # 必要に応じてホットリロードを設定
+      - ./flex-diary-ui:/app  # ホットリロードを有効にするためにソースコードをマウント
+      - /app/node_modules  # ホスト側のnode_modulesをコンテナから除外
+    environment:
+      - CHOKIDAR_USEPOLLING=true  # ホットリロードのための設定
 
 volumes:
   mongodb-data:
