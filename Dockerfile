@@ -24,7 +24,5 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 ENV GRADLE_USER_HOME=/app/.gradle
 # ホットリロード等を有効に
 ENV SPRING_PROFILES_ACTIVE=dev
-# リモートデバッグのためのjvmオプション
-ENV GRADLE_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
 # 実行時にトリガーしたい処理
 ENTRYPOINT ["./gradlew", "bootRun"]

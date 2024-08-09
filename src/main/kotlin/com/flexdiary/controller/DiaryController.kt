@@ -30,6 +30,9 @@ class DiaryController(private val diaryService: DiaryService) {
 
     @GetMapping("/hello")
     fun hello(): String {
-        return "Hello, World!"
+        val greeting = "Hello"
+        val target = "World"
+        val message = "$greeting, $target!!"
+        return message
     }
 }
