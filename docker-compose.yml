@@ -13,17 +13,16 @@ services:
 
   api:
     build:
-      context: ./flex-diary-api
+      context: ./api
       dockerfile: Dockerfile
       target: development
-    container_name: flex-diary-api
+    container_name: api
     working_dir: /app
     ports:
       - "8080:8080"
       - "5005:5005"  # デバッグ用のポートを追加
     volumes:
-      - ./flex-diary-api:/app  # ホットリロード用のボリュームマウント
-      # - ./flex-diary-api/build/libs:/app/build/libs
+      - ./api:/app  # ホットリロード用のボリュームマウント
     environment:
       MONGO_CONNECTION_STRING: mongodb://root:example@mongodb:27017/admin
       SPRING_PROFILES_ACTIVE: dev
@@ -32,15 +31,16 @@ services:
 
   ui:
     build:
-      context: ./flex-diary-ui
+      context: ./ui
       dockerfile: Dockerfile
       target: development
-    container_name: flex-diary-ui
+    container_name: ui
     working_dir: /app 
     ports:
       - "5173:5173" # viteサーバーのポート
+      - "9229:9229" # デバッグポート
     volumes:
-      - ./flex-diary-ui:/app  # ホットリロードを有効にするためにソースコードをマウント
+      - ./ui:/app  # ホットリロードを有効にするためにソースコードをマウント
       - /app/node_modules  # ホスト側のnode_modulesをコンテナから除外
     environment:
       - CHOKIDAR_USEPOLLING=true  # ホットリロードのための設定
