@@ -80,3 +80,56 @@ git submodule update --init --recursive
     ```
 
 これらの点に注意しながら、開発を進めてください。
+
+## Dockerを使った開発とリモートデバッグ
+
+このプロジェクトでは、`flex-diary-api`（Spring Boot製）をDockerコンテナ内で実行し、リモートデバッグを行うことができます。以下の手順に従って設定を行い、効率的な開発環境を構築してください。
+
+### Dockerを使った`flex-diary-api`の起動
+
+1. **Dockerイメージのビルドとコンテナの起動**
+
+   `flex-diary-api`をDockerコンテナ内で実行するために、以下のコマンドを実行してDockerイメージをビルドし、コンテナを起動します。
+
+   ```sh
+   cd flex-diary-api
+   docker-compose build
+   docker-compose up
+   ```
+
+   この操作により、`flex-diary-api`がコンテナ内で起動します。
+
+2. **ホットリロードと自動ビルド**
+
+   開発中にコードを変更した場合、コンテナ内でホットリロードが有効になっているため、ビルドすると自動的に再起動が行われます。
+   必要に応じてIDEで自動ビルドの設定をしてください。
+### リモートデバッグの設定
+
+リモートデバッグを行うために、以下の設定を行います。
+
+1. **IntelliJ IDEAでのリモートデバッグ構成**
+
+   IntelliJ IDEAで新しいデバッグ構成を作成し、以下の設定を行います。
+
+   - **デバッグモード**: リモート JVM にアタッチ
+   - **トランスポート**: Socket
+   - **ホスト**: localhost
+   - **ポート**: 5005
+
+   デバッグ構成の例は以下の画像を参照してください。
+
+   ![デバッグ構成](./docs/images/idea-debug-config.png)
+
+2. **build.gradleでのデバッグオプション設定**
+
+   `build.gradle`の`bootRun`タスクで、以下のようにデバッグオプションを直接指定しています。これにより、デバッグオプションがアプリケーションプロセスにのみ適用され、不要なプロセスへの影響を避けています。
+
+   ```groovy
+   bootRun {
+       jvmArgs = ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"]
+   }
+   ```
+
+3. **リモートデバッグの開始**
+
+   IntelliJ IDEAでリモートデバッグ構成を選択し、「デバッグ」ボタンを押します。これにより、コンテナ内の`flex-diary-api`に接続し、デバッグを行うことができます。
