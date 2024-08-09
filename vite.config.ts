@@ -5,7 +5,10 @@ import react from "@vitejs/plugin-react"
 export default defineConfig({
   plugins: [react()],
   server: {
-    open: true,
+    open: false,
+    watch: {
+      usePolling: true, // ホットリロードの安定性を向上させる
+    },
   },
   test: {
     globals: true,
