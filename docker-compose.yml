@@ -23,7 +23,7 @@ services:
       - "5005:5005"  # デバッグ用のポートを追加
     volumes:
       - ./flex-diary-api:/app  # ホットリロード用のボリュームマウント
-      - ./flex-diary-api/build/libs:/app/build/libs
+      # - ./flex-diary-api/build/libs:/app/build/libs
     environment:
       MONGO_CONNECTION_STRING: mongodb://root:example@mongodb:27017/admin
       SPRING_PROFILES_ACTIVE: dev
