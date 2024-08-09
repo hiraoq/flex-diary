@@ -20,8 +20,7 @@ COPY . .
 # entrypoint.shをコピーして実行権限を付与
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
-# Gradleキャッシュディレクトリを指定
-ENV GRADLE_USER_HOME=/app/.gradle
+
 # ホットリロード等を有効に
 ENV SPRING_PROFILES_ACTIVE=dev
 # 実行時にトリガーしたい処理
