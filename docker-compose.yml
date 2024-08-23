@@ -20,7 +20,7 @@ services:
     working_dir: /app
     ports:
       - "8000:8000"  # FastAPIのデフォルトポート
-      - "5005:5005"  # デバッグ用ポート
+      - "5678:5678"  # デバッグ用ポート
     volumes:
       - ./api:/app  # ホットリロード用のボリュームマウント
     environment:
