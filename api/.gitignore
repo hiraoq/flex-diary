@@ -1,40 +1,63 @@
-HELP.md
-.gradle
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Poetry virtual environments
+# .venv  # If you are using a specific virtual environment, uncomment this line
+
+# Distribution / packaging
+.Python
 build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
+# Logs and databases
+*.log
+*.sqlite3
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
+# Pyre type checker
+.pyre/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+# dotenv
+.env
 
-### VS Code ###
-.vscode/
+# Test coverage
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
 
-### Kotlin ###
-.kotlin
+# Pytest
+.pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Python scripts for automation and utility
+scripts/*.pyc
+
+# Ignore data files if needed
+# data/*.json  # Uncomment if you want to exclude data files from version control
+
+# Docker
+docker-compose.override.yml

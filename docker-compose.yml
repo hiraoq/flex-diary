@@ -19,16 +19,13 @@ services:
     container_name: api
     working_dir: /app
     ports:
-      - "8080:8080"
-      - "5005:5005"  # デバッグ用のポートを追加
+      - "8000:8000"  # FastAPIのデフォルトポート
+      - "5678:5678"  # デバッグ用ポート
     volumes:
       - ./api:/app  # ホットリロード用のボリュームマウント
-      - /app/build  # コンテナ内でのみ使用するビルドディレクトリ
-      - /app/.gradle  # コンテナ内の`.gradle`フォルダを独立させる
-
     environment:
       MONGO_CONNECTION_STRING: mongodb://root:example@mongodb:27017/admin
-      SPRING_PROFILES_ACTIVE: dev
+      FASTAPI_ENV: development
     depends_on:
       - mongodb
 

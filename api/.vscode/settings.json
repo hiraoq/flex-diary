@@ -1,0 +1,22 @@
+{
+  "python.analysis.extraPaths": ["./"],
+  "python.analysis.typeCheckingMode": "basic",
+  "python.defaultInterpreterPath": ".venv/bin/python",
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.ruff": "explicit",
+      "source.organizeImports.ruff": "explicit"
+    }
+  },
+  "files.exclude": {
+    ".venv": true,
+    "**/__pycache__": true,
+    "**/*.pyc": true,
+    ".*cache": true,
+    "*.lock": true
+  },
+  "mypy.enabled": false,
+  "mypy-type-checker.args": ["--disallow-untyped-defs"],
+}

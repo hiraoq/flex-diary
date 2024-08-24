@@ -1,27 +1,33 @@
-# ベースイメージとしてAmazon Corretto 21を使用
-FROM amazoncorretto:21 AS builder
+# ベースイメージ
+FROM python:3.12.5-slim AS base
+
+# 作業ディレクトリを設定
 WORKDIR /app
+
+# Poetryのインストール
+COPY pyproject.toml poetry.lock ./
+RUN pip install --no-cache-dir poetry \
+    && poetry config virtualenvs.create false \
+    && poetry install --no-interaction --no-ansi
+
+# アプリケーションのソースコードをコピー
 COPY . .
-# gradlew に実行権限を付与する
-RUN chmod +x ./gradlew
-# Gradleを使用してプロジェクトをビルド
-RUN ./gradlew build --no-daemon -x test
 
-# 本番用のステージ
-FROM amazoncorretto:21 AS production
-WORKDIR /app
-COPY --from=builder /app/build/libs/app.jar /app/app.jar
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+# -------------------------------------------
+# ステージ1: 開発用
+# -------------------------------------------
+FROM base AS development
 
-# 開発用のステージ
-FROM amazoncorretto:21 AS development
-WORKDIR /app
-COPY . .
-# entrypoint.shをコピーして実行権限を付与
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
+# ホットリロードなど開発用のコマンドを実行
+CMD ["python", "-Xfrozen_modules=off", "-m", "uvicorn", "app.Main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 
-# ホットリロード等を有効に
-ENV SPRING_PROFILES_ACTIVE=dev
-# 実行時にトリガーしたい処理
-ENTRYPOINT ["./gradlew", "bootRun"]
+# -------------------------------------------
+# ステージ2: 本番用
+# -------------------------------------------
+FROM base AS production
+
+# 不要な開発依存を削除
+RUN poetry install --no-dev --no-interaction --no-ansi
+
+# FastAPIを起動
+CMD ["uvicorn", "app.Main:app", "--host", "0.0.0.0", "--port", "8000"]

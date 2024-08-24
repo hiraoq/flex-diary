@@ -1,135 +1,216 @@
 
-# flex-diary-root
+# FlexDiary 仕様書
 
-`flex-diary-root`リポジトリは、`flex-diary-ui`（React製）と`flex-diary-api`（Spring Boot製）をサブモジュールとして統合したプロジェクトです。
+## 概要
+FlexDiaryは、テンプレートに従って日記を記録できるウェブアプリケーションです。ユーザーは、事前に定義されたテンプレートを使用して、日々の活動や感情を記録することができます。このアプリケーションは、ユーザーが毎日の日記をテンプレートにしたがって速やかにストレスなく書くことと、後からデータを見返して分析できるようにすることを目的としています。
 
-## クローン方法
+## 主要機能
 
-このリポジトリをクローンする際は、サブモジュールも同時にクローンする必要があります。以下のコマンドを使用してください：
+### 1. 日記の記録
+- **テンプレートによる日記作成:**
+  - 毎日、同じテンプレートに基づいて日記を記録します。
+  - テンプレートの例:
+    - 今日食べたもの
+    - 飲んだ薬
+    - 勉強したこと
+    - 楽しかったこと
+    - 摂取カロリー
 
-```sh
-git clone --recursive git@github.com:hiraoq/flex-diary-root.git
+- **テンプレートのカスタマイズ:**
+  - ユーザーはテンプレートに任意の項目を追加したり削除したりしてカスタマイズできます。
+  - カスタマイズ可能なフィールドの例:
+    - テキストフィールド（自由記述）
+    - 数値フィールド（カロリーや時間など）
+    - リストフィールド（食べたものリスト）
+
+- **テンプレートのデータ構造:**
+  ```json
+  {
+    "template_id": "unique-template-id",
+    "name": "Daily Journal Template",
+    "description": "A template for daily journaling",
+    "fields": [
+      {
+        "field_id": "field-1",
+        "label": "What did you eat today?",
+        "type": "text",
+        "required": true
+      },
+      {
+        "field_id": "field-2",
+        "label": "How many calories did you consume?",
+        "type": "number",
+        "required": false
+      },
+      {
+        "field_id": "field-3",
+        "label": "What was the highlight of your day?",
+        "type": "text",
+        "required": true
+      }
+    ]
+  }
+  ```
+
+- **日記エントリーのデータ構造:**
+  ```json
+  {
+    "diary_id": "unique-diary-id",
+    "template_id": "unique-template-id",
+    "date": "2024-08-23",
+    "entries": [
+      {
+        "field_id": "field-1",
+        "value": "Pasta and salad"
+      },
+      {
+        "field_id": "field-2",
+        "value": 600
+      },
+      {
+        "field_id": "field-3",
+        "value": "Meeting with an old friend"
+      }
+    ],
+    "metadata": {
+      "mood": "happy",
+      "tags": ["food", "friends"],
+      "externalData": [
+        {
+          "service": "GitHub",
+          "data": {
+            "commits": 3
+          }
+        }
+      ]
+    }
+  }
+  ```
+
+### 2. データの自動取得
+- **外部サービスからの行動履歴データ取得:**
+  - ユーザーが利用したWebサービスからデータを自動的に日記に追加します。
+  - 例:
+    - GitHubへのコミット
+    - YouTubeで見た動画
+    - ChatGPTとのチャット内容
+  - これらのデータはAPIを使用して取得し、毎日の日記に自動的に追加されます。
+
+### 3. データの管理と分析
+- **日記データの保存と管理:**
+  - MongoDBを使用して日記データを保存します。
+  - ユーザーごとにデータを管理し、後から検索・分析が可能です。
+
+- **データ分析機能:**
+  - ユーザーは日記データをフィルタリングし、特定の期間やキーワードに基づいてデータを分析できます。
+  - 分析結果はグラフやチャートで視覚化します。
+
+### 4. ユーザー認証と管理
+- **簡易認証:**
+  - 基本的な認証機能を提供します。ユーザーは一度ログインすれば、セッションが維持され、再度ログインする必要がありません。
+
+### 5. TODOリスト（予定）
+  - TODOリスト機能を追加する予定です。ユーザーは日々のタスクを簡単に管理できます。
+  - 将来的に日記とTODOリストの連携を検討しています。
+
+## アーキテクチャ
+
+### 1. バックエンド
+- **技術スタック:**
+  - フレームワーク: FastAPI
+  - データベース: MongoDB
+  - 認証: JWT
+  - GraphQL: Strawberry
+
+- **データ構造:**
+  - ユーザー:
+    ```json
+    {
+      "username": "string",
+      "email": "string",
+      "role": "string"
+    }
+    ```
+
+  - 日記:
+    ```json
+    {
+      "title": "string",
+      "content": "string",
+      "date": "ISODate",
+      "metadata": {
+        "mood": "string",
+        "tags": ["string"],
+        "externalData": [
+          {
+            "service": "string",
+            "data": "object"
+          }
+        ]
+      }
+    }
+    ```
+
+  - テンプレートと日記エントリーの詳細なデータ構造は上記参照。
+
+### 2. フロントエンド
+- **技術スタック:**
+  - フレームワーク: React
+  - UIライブラリ: MUI
+  - 開発ツール: Vite
+
+- **GraphQLの統合:**
+  - フロントエンドからのデータ取得にはGraphQLを使用します。
+  - Apollo ClientなどのGraphQLクライアントを使用して、柔軟かつ効率的なデータアクセスを提供します。
+
+## 開発環境
+
+### 1. 開発ツール
+- **Pythonバージョン管理:** asdf
+- **依存関係管理:** Poetry
+- **コンテナ化:** Docker、Docker Compose
+
+### 2. ディレクトリ構造
+```bash
+flex-diary/
+├── api/
+│   ├── Dockerfile
+│   ├── pyproject.toml
+│   ├── poetry.lock
+│   ├── app/
+│   │   ├── main.py
+│   │   ├── schema.py
+│   ├── scripts/
+│   │   └── import_data.py
+│   └── data/
+│       ├── users.json
+│       └── diaries.json
+├── ui/
+│   ├── Dockerfile
+│   ├── src/
+│   ├── package.json
+│   └── vite.config.ts
+├── docker-compose.yml
+└── README.md
 ```
 
-既にクローン済みのリポジトリにサブモジュールを取得する場合は、以下のコマンドを実行してください：
+### 3. 環境構築手順
+1. リポジトリをクローン
+2. `docker-compose up --build` で環境を起動
+3. GraphQLエンドポイント: `http://localhost:8000/graphql` で動作確認
 
-```sh
-git submodule update --init --recursive
-```
+## 運用・拡張
 
-## 開発フロー
+### 1. データスキーマの変更
+- **マイグレーション手順:** 
+  - データ構造の変更が必要な場合、Pythonスクリプトを使用して既存データを新しい構造に移行します。
+  - 運用中のデータのマイグレーションには、データベースバックアップを取得してから段階的に移行を行います。
 
-1. **リポジトリのクローン**
-    ```sh
-    git clone --recursive git@github.com:hiraoq/flex-diary-root.git
-    cd flex-diary-root
-    ```
+### 2. カスタム機能の追加
+- **外部API連携:** 
+  - 新しい外部サービスと連携する場合、対応するAPIエンドポイントを追加し、必要な認証を行います。
+  - 必要に応じて、MongoDBに新しいフィールドやコレクションを追加してデータを保存します。
 
-2. **変更の反映**
-    サブモジュールでの変更はそれぞれのディレクトリ内で行い、コミットを作成します。以下は例です。
-
-    ### flex-diary-uiでの変更
-    ```sh
-    cd flex-diary-ui
-    # 変更を行う
-    git add .
-    git commit -m "変更内容の説明"
-    git push origin main
-    ```
-
-    ### flex-diary-apiでの変更
-    ```sh
-    cd flex-diary-api
-    # 変更を行う
-    git add .
-    git commit -m "変更内容の説明"
-    git push origin main
-    ```
-
-3. **サブモジュールの更新**
-    サブモジュールに変更があった場合は、`flex-diary-root`リポジトリでも更新を行います。
-    TODO:GithubActions等で自動化
-    
-    ```sh
-    git submodule update --remote --merge
-    git commit -am "Update submodules"
-    git push origin main
-    ```
-
-## 注意点
-
-1. **サブモジュールの管理**  
-    サブモジュールとしているリポジトリを単独でクローンして、コミットやプッシュを行っても大丈夫です。
-    ただしその後、できればflex-diary-rootリポジトリに戻ってサブモジュールの参照を最新に更新してプッシュしてください。
-    これを行うことで、他の開発者がflex-diary-rootをクローンした際に最新のflex-diary-uiの変更が反映されます。 TODO:自動化
-
-2. **サブモジュールの状態確認**  
-    サブモジュールの状態を確認するには以下のコマンドを使用します：
-    ```sh
-    git submodule status
-    ```
-
-3. **サブモジュールのコミット漏れに注意**  
-    サブモジュール内での変更をプッシュした後、`flex-diary-root`リポジトリのコミットを忘れないようにしてください。これを怠ると、他の開発者が最新の変更を取得できなくなります。
-
-4. **サブモジュールの初期化忘れ**  
-    本リポジトリをクローンする際、--recursiveを付けなかった場合は、クローン後にサブモジュールの初期化と更新を忘れないようにしてください。
-    初期化を怠ると、サブモジュールの内容が正しく取得されません。
-    ```sh
-    git submodule update --init --recursive
-    ```
-
-これらの点に注意しながら、開発を進めてください。
-
-## Dockerを使った開発とリモートデバッグ
-
-このプロジェクトでは、`flex-diary-api`（Spring Boot製）をDockerコンテナ内で実行し、リモートデバッグを行うことができます。以下の手順に従って設定を行い、効率的な開発環境を構築してください。
-
-### Dockerを使った`flex-diary-api`の起動
-
-1. **Dockerイメージのビルドとコンテナの起動**
-
-   `flex-diary-api`をDockerコンテナ内で実行するために、以下のコマンドを実行してDockerイメージをビルドし、コンテナを起動します。
-
-   ```sh
-   cd flex-diary-api
-   docker-compose build
-   docker-compose up
-   ```
-
-   この操作により、`flex-diary-api`がコンテナ内で起動します。
-
-2. **ホットリロードと自動ビルド**
-
-   開発中にコードを変更した場合、コンテナ内でホットリロードが有効になっているため、ビルドすると自動的に再起動が行われます。
-   必要に応じてIDEで自動ビルドの設定をしてください。
-### リモートデバッグの設定
-
-リモートデバッグを行うために、以下の設定を行います。
-
-1. **IntelliJ IDEAでのリモートデバッグ構成**
-
-   IntelliJ IDEAで新しいデバッグ構成を作成し、以下の設定を行います。
-
-   - **デバッグモード**: リモート JVM にアタッチ
-   - **トランスポート**: Socket
-   - **ホスト**: localhost
-   - **ポート**: 5005
-
-   デバッグ構成の例は以下の画像を参照してください。
-
-   ![デバッグ構成](./docs/images/idea-debug-config.png)
-
-2. **build.gradleでのデバッグオプション設定**
-
-   `build.gradle`の`bootRun`タスクで、以下のようにデバッグオプションを直接指定しています。これにより、デバッグオプションがアプリケーションプロセスにのみ適用され、不要なプロセスへの影響を避けています。
-
-   ```groovy
-   bootRun {
-       jvmArgs = ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"]
-   }
-   ```
-
-3. **リモートデバッグの開始**
-
-   IntelliJ IDEAでリモートデバッグ構成を選択し、「デバッグ」ボタンを押します。これにより、コンテナ内の`flex-diary-api`に接続し、デバッグを行うことができます。
+### 3. 未定部分について
+- **認証システム:** 現時点でJWTを予定していますが、実装方法や詳細は未定です。
+- **TODOリストとの連携:** TODOリスト機能の開発は基本的な日記機能の開発完了後になる予定で、具体的な仕様はまだ決目る必要がありません。今後の仕様決定に応じて、フロントエンドやバックエンドでの実装が進められます。
