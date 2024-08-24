@@ -19,16 +19,22 @@ beanie = "^1.26.0"
 pytest = "^8.3.2"
 httpx = "^0.27.0"
 ruff = "^0.6.2"
+mypy = "^1.11.1"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.mypy]
-plugins = "pydantic.mypy"
+plugins = ["pydantic.mypy"]
 files = "app/**/*.py"
 check_untyped_defs = true
 disallow_untyped_defs = true
+python_version = "3.12"
+ignore_missing_imports = true
+disallow_untyped_calls = false
+disallow_incomplete_defs = false
+warn_unused_ignores = false
 
 [tool.ruff]
 target-version = "py312" # Pythonのバージョンを指定
