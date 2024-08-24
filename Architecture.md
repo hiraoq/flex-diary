@@ -32,9 +32,7 @@
    - クラス名とファイル名を一致させ、ファイル名をクラス名と同様にキャメルケースで命名します。例えば、`UserRepositoryImpl.py`のようにします。
    - これにより、ファイル名とクラス名が一致し、特にPythonに不慣れな開発者にとっても読みやすくなります。
 
-### MongoDBに基づく設計例
-
-#### 1. プロジェクト構成
+### プロジェクト構成
 ```plaintext
 Project/
 │
@@ -54,59 +52,9 @@ Project/
 ├── Dependency.py  # 依存性注入の設定
 └── Main.py  # アプリケーションエントリーポイント
 ```
-
-#### 2. MongoDB用のエンティティ定義（`Models/Mongo/User.py`）
-```python
-from beanie import Document
-
-class User(Document):
-    name: str
-    email: str
-```
-#### 3. リポジトリインターフェース（Repositories/IUserRepository.py）
-```python
-from abc import ABC, abstractmethod
-from typing import Generic, TypeVar
-
-T = TypeVar('T')
-
-class IUserRepository(ABC, Generic[T]):
-    @abstractmethod
-    async def get_user_by_email(self, email: str) -> T:
-        pass
-
-    @abstractmethod
-    async def create_user(self, user_data: dict) -> T:
-        pass
-```
-#### 4. MongoDB用のリポジトリ実装（Repositories/UserRepositoryImpl.py）
-```python
-from Models.User import User
-from Repositories.IUserRepository import IUserRepository
-
-class UserRepositoryImpl(IUserRepository[User]):
-    async def get_user_by_email(self, email: str) -> User:
-        return await User.find_one(User.email == email)
-
-    async def create_user(self, user_data: dict) -> User:
-        user = User(**user_data)
-        await user.insert()
-        return user
-```
-#### 5. 依存性注入の設定（Dependency.py）
-```python
-from Repositories.UserRepositoryImpl import UserRepositoryImpl
-from Services.UserService import UserService
-
-def get_user_repository() -> UserRepositoryImpl:
-    return UserRepositoryImpl()
-
-def get_user_service(user_repository: UserRepositoryImpl = Depends(get_user_repository)) -> UserService:
-    return UserService(user_repository)
-
-```
-#### 6. インポートの切り替え（Models/__init__.py）
+### DBの切り替え方法
 MongoDBを使用する場合:
+Models/__init__.py を修正
 ```python
 from .Mongo.User import User
 ```
