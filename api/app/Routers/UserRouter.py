@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.Dependency import get_user_service
-from app.Models.mongo.User import User
+from app.Models.Mongo.User import User
 from app.Services.UserService import UserService
 
 router = APIRouter()

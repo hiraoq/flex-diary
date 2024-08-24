@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Optional
 
-from app.Models.mongo.User import User
+from app.Models.Mongo.User import User
 
 
 class IUserRepository(ABC):

@@ -19,7 +19,7 @@ COPY . .
 FROM base AS development
 
 # ホットリロードなど開発用のコマンドを実行
-CMD ["python", "-Xfrozen_modules=off", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["python", "-Xfrozen_modules=off", "-m", "uvicorn", "app.Main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 
 # -------------------------------------------
 # ステージ2: 本番用
@@ -30,4 +30,4 @@ FROM base AS production
 RUN poetry install --no-dev --no-interaction --no-ansi
 
 # FastAPIを起動
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app.Main:app", "--host", "0.0.0.0", "--port", "8000"]
