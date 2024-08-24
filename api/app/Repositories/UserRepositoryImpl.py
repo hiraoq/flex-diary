@@ -12,3 +12,17 @@ class UserRepositoryImpl(IUserRepository):
         user = User(**user_data)
         await user.insert()
         return user
+
+    async def update_user(self, email: str, user_data: dict) -> User | None:
+        user = await self.get_user_by_email(email)
+        if user:
+            for key, value in user_data.items():
+                setattr(user, key, value)
+            await user.save()
+        return user
+
+    async def delete_user(self, email: str) -> User | None:
+        user = await self.get_user_by_email(email)
+        if user:
+            await user.delete()
+        return user
