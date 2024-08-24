@@ -52,8 +52,9 @@ Project/
 ```
 ### DBの切り替え方法
 MongoDBを使用する場合:
-Models/__init__.py を修正
+
 ```python
+# Models/__init__.py
 from .Mongo.User import User
 ```
 将来的にPostgreSQLに変更する場合は、PostgresディレクトリのUser.pyをインポートするだけで対応できます。
