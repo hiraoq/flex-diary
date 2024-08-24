@@ -1,5 +1,5 @@
 {
-  "python.analysis.extraPaths": ["./app"],
+  "python.analysis.extraPaths": ["./"],
   "python.analysis.typeCheckingMode": "basic",
   "python.defaultInterpreterPath": ".venv/bin/python",
   "[python]": {
