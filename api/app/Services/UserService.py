@@ -1,4 +1,4 @@
-from app.Models.mongo.User import User
+from app.Models.Mongo.User import User
 from app.Repositories.IUserRepository import IUserRepository
 
 
